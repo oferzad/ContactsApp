@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ContactsApp.Views.ContactsList"
+             Title="אנשי קשר">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="Logout" Order="Secondary" Text="יציאה" Priority="0" Clicked="Logout_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="White" FlowDirection="RightToLeft">
+            <SearchBar x:Name="searchBar" 
+                       Placeholder="Type a Search Term" 
+                       Text="{Binding SearchTerm}"
+                       />
+            <RefreshView x:Name="refreshView"
+             Command="{Binding RefreshCommand}"
+             IsRefreshing="{Binding IsRefreshing}">
+                <CollectionView EmptyView="אין אנשי קשר" x:Name="collectionName" ItemsSource="{Binding FilteredContacts}" SelectionMode="Single" BackgroundColor="White"
+                                SelectionChangedCommand="{Binding UpdateContact}" SelectionChangedCommandParameter="{Binding  Source={x:Reference collectionName}, Path=SelectedItem}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Span="1" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="מחק"
+                                           IconImageSource="delete.png"
+                                           BackgroundColor="LightCoral"
+                                           Command="{Binding Source={x:Reference collectionName}, Path=BindingContext.DeleteContact}"
+                                           CommandParameter="{Binding}" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid Margin="7">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Text="{Binding Path=FirstName, StringFormat='{0}'}" HorizontalTextAlignment="Center" FontSize="Caption"  Grid.Row="0" Grid.Column="1"/>
+                                    <Label Text="{Binding Path=LastName, StringFormat='{0}'}" HorizontalTextAlignment="Start" FontSize="Caption" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
+                                </Grid>
+
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+            <Button Text="הוסף איש קשר" Command="{Binding AddContact}"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

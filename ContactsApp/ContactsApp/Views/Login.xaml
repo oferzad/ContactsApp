@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ContactsApp.Views.Login">
+    <ContentPage.Resources>
+        <Style TargetType="StackLayout" x:Key="LoginStack">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Padding" Value="30"/>
+            <Setter Property="Spacing" Value="40"/>
+            <Setter Property="FlowDirection" Value="RightToLeft"/>
+        </Style>
+        <Style TargetType="Label" x:Key="FormTitle">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="FontSize" Value="Large"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+        <Style TargetType="Entry" x:Key="LoginEntry">
+            <Setter Property="PlaceholderColor" Value="White"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+        <Style TargetType="Button" x:Key="LoginButton">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontSize" Value="Large"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="BackgroundColor" Value="#088da5"/>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Style="{StaticResource LoginStack}">
+            <Label Text="אנשי קשר" Style="{StaticResource FormTitle}"></Label>
+            <Frame BackgroundColor="#BF043055" HasShadow="False">
+                <StackLayout>
+                    <Entry x:Name="Email" Text="{Binding Email}" Placeholder="דואר אלקטרוני"   
+                           Keyboard="Email"  
+                           Style="{StaticResource LoginEntry}"/>
+                    <Entry x:Name="Password" Text="{Binding Password}" Placeholder="סיסמה" Focused="Password_Focused" 
+                           Style="{StaticResource LoginEntry}"/>
+                </StackLayout>
+            </Frame>
+            <Button Command="{Binding SubmitCommand}" Text="התחבר" Style="{StaticResource LoginButton}" />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
