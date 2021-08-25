@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ContactsApp.Views.AddPhone"
+             FlowDirection="RightToLeft">
+    
+    <ContentPage.Content>
+        <StackLayout Padding="0,20,0,0">
+            <!-- סוג הטלפון -->
+            <Label Text="סוג טלפון" Style="{StaticResource labelNameStyle}"/>
+            <Picker Title="סוג טלפון" ItemsSource="{Binding PhoneTypes}" ItemDisplayBinding="{Binding TypeName}" SelectedItem="{Binding PhoneType}"/>
+            <!-- מספר טלפון -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label Text="מספר טלפון" Grid.Column="0" Style="{StaticResource labelNameStyle}"/>
+                <Label Text="{Binding PhoneNumberError}" IsVisible="{Binding ShowPhoneNumberError}" Grid.Column="1" Style="{StaticResource labelErrorStyle}"/>
+            </Grid>
+            <Entry Placeholder="הכנס מספר טלפון" Keyboard="Numeric" Text="{Binding PhoneNumber}" Style="{StaticResource entryStyle}"/>
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="שמור וסגור" Margin="20"
+               FontSize="Medium" Command="{Binding SaveCommand}"  HorizontalOptions="Center"/>
+                <Button Text="ביטול" Margin="20"
+               FontSize="Medium" Command="{Binding CancelCommand}" HorizontalOptions="Center"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

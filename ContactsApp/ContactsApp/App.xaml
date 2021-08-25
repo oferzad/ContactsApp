@@ -3,6 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ContactsApp.App">
     <Application.Resources>
+        <ResourceDictionary>
+            <Style x:Key="labelNameStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="Small" />
+            </Style>
+            <Style x:Key="labelErrorStyle" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="End" />
+                <Setter Property="TextColor" Value="Red" />
+                <Setter Property="FontSize" Value="Small" />
+            </Style>
+            <Style x:Key="entryStyle" TargetType="Entry">
+                <Setter Property="HorizontalOptions" Value="Fill" />
+            </Style>
+            <Style x:Key="labelTableStyle" TargetType="Label">
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="FontSize" Value="Caption" />
+                <Setter Property="FontSize" Value="Caption" />
+            </Style>
 
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

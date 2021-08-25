@@ -82,6 +82,7 @@ namespace ContactsApp.ViewModels
             App theApp = (App)App.Current;
             this.allContacts = theApp.CurrentUser.UserContacts;
 
+            
             //Copy list to the filtered list
             this.FilteredContacts = new ObservableCollection<UserContact>(this.allContacts.OrderBy(uc => uc.LastName));
             SearchTerm = String.Empty;
@@ -102,6 +103,7 @@ namespace ContactsApp.ViewModels
                 {
                     if (!this.FilteredContacts.Contains(uc))
                         this.FilteredContacts.Add(uc);
+                    
                     
                 }
             }
@@ -145,28 +147,61 @@ namespace ContactsApp.ViewModels
         #endregion
         #region Delete Contact
         public ICommand DeleteContact => new Command<UserContact>(OnDeleteContact);
-        public void OnDeleteContact(UserContact uc) { }
+        public async void OnDeleteContact(UserContact uc) 
+        {
+            ContactsAPIProxy proxy = ContactsAPIProxy.CreateProxy();
+            bool success = await proxy.RemoveContact(uc);
+            if (success)
+            {
+                this.allContacts.Remove(uc);
+                this.FilteredContacts.Remove(uc);
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("שגיאה", "שגיאה במחיקת איש קשר", "בסדר", FlowDirection.RightToLeft);
+            }
+        }
         #endregion
         #region Add New Contact
         public ICommand AddContact => new Command(OnAddContact);
-        public void OnAddContact()
+        public async void OnAddContact()
         {
-            //App theApp = (App)App.Current;
-            //Page p = new Views.AddEvent(this, this.allEvents);
-
-            //await theApp.MainPage.Navigation.PushAsync(p);
+            App theApp = (App)App.Current;
+            AddContactViewModel vm = new AddContactViewModel();
+            vm.ContactUpdatedEvent += OnContactAdded;
+            Page p = new Views.AddContact(vm);
+            await theApp.MainPage.Navigation.PushAsync(p);
         }
-        
+        //This event is fired by the AddContact view model object and send the old contact to be removed and new contact to be added
+        public void OnContactAdded(UserContact newUc, UserContact oldUc)
+        {
+            //Change the Phone type objects to be the same instance of the PhoneTypes in App level
+            //This is a must in order to send the server the same objects
+            foreach (ContactPhone cp in newUc.ContactPhones)
+                cp.PhoneType = PhoneTypes.Where(pt => pt.TypeId == cp.PhoneTypeId).FirstOrDefault();
+
+            //Add the new contact, remove the old one from both lists and refresh the filtered list
+            this.allContacts.Remove(oldUc);
+            this.allContacts.Add(newUc);
+            this.FilteredContacts.Remove(oldUc);
+            OnTextChanged(SearchTerm);
+        }
+
         #endregion
         #region Update Existing Contact
         public ICommand UpdateContact => new Command<UserContact>(OnUpdateContact);
-        public void OnUpdateContact(UserContact uc)
+        public async void OnUpdateContact(UserContact uc)
         {
-            //App theApp = (App)App.Current;
-            //Page p = new Views.AddEvent(this, this.allEvents, ev);
-            //await theApp.MainPage.Navigation.PushAsync(p);
-            if (ClearSelection != null)
-                ClearSelection();
+            if (uc != null)
+            {
+                App theApp = (App)App.Current;
+                AddContactViewModel vm = new AddContactViewModel(uc);
+                vm.ContactUpdatedEvent += OnContactAdded;
+                Page p = new Views.AddContact(vm);
+                await theApp.MainPage.Navigation.PushAsync(p);
+                if (ClearSelection != null)
+                    ClearSelection();
+            }
         }
 
         public event Action ClearSelection;

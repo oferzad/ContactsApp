@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using ContactsApp.Services;
 using ContactsApp.Models;
 using Xamarin.Essentials;
+using System.Linq;
 
 namespace ContactsApp.ViewModels
 {
@@ -62,7 +63,7 @@ namespace ContactsApp.ViewModels
 
         public async void OnSubmit()
         {
-            ServerStatus = "מחבר לשרת...";
+            ServerStatus = "מתחבר לשרת...";
             await App.Current.MainPage.Navigation.PushModalAsync(new Views.ServerStatusPage(this));
             ContactsAPIProxy proxy = ContactsAPIProxy.CreateProxy();
             User user = await proxy.LoginAsync(Email, Password);
@@ -77,16 +78,25 @@ namespace ContactsApp.ViewModels
                 App theApp = (App)App.Current;
                 theApp.CurrentUser = user;
                 bool success = await LoadPhoneTypes(theApp);
-                await App.Current.MainPage.Navigation.PopModalAsync();
                 if (!success)
                 {
+                    await App.Current.MainPage.Navigation.PopModalAsync();
                     await App.Current.MainPage.DisplayAlert("שגיאה", "קריאת נתונים נכשלה. נסה שוב מאוחר יותר", "בסדר");
                 }
                 else
                 {
-                    theApp.MainPage = new NavigationPage(new Views.ContactsList());
-                    ((NavigationPage)theApp.MainPage).FlowDirection = FlowDirection.RightToLeft;
+                    //Initiate all phone types refrence to the same objects of PhoneTypes
+                    foreach (UserContact uc in user.UserContacts)
+                    {
+                        foreach (Models.ContactPhone cp in uc.ContactPhones)
+                            cp.PhoneType = theApp.PhoneTypes.Where(pt => pt.TypeId == cp.PhoneTypeId).FirstOrDefault();
+                    }
+
+                    Page p = new NavigationPage(new Views.ContactsList());
+                    App.Current.MainPage = p;
                 }
+                
+
             }
         }
 

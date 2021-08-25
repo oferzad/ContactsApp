@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ContactsApp.Views.AddContact"
+             FlowDirection="RightToLeft"
+             Title="איש קשר חדש">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="AddPhone" Order="Primary" Text="הוסף טלפון" Priority="0" Command="{Binding AddPhoneCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <ScrollView>
+                <StackLayout Padding="0,20,0,0">
+                    <!-- שם פרטי -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Text="שם פרטי" Grid.Column="0" Style="{StaticResource labelNameStyle}"/>
+                        <Label Text="{Binding NameError}" IsVisible="{Binding ShowNameError}" Grid.Column="1" Style="{StaticResource labelErrorStyle}"/>
+                    </Grid>
+                    <Entry Placeholder="הכנס שם פרטי" Text="{Binding Name}" Style="{StaticResource entryStyle}"/>
+
+                    <!-- שם משפחה -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Text="שם משפחה" Grid.Column="0" Style="{StaticResource labelNameStyle}"/>
+                        <Label Text="{Binding LastNameError}" IsVisible="{Binding ShowLastNameError}" Grid.Column="1" Style="{StaticResource labelErrorStyle}"/>
+                    </Grid>
+                    <Entry Placeholder="הכנס שם משפחה" Text="{Binding LastName}" Style="{StaticResource entryStyle}"/>
+
+
+                    <!-- דואר אלקטרוני-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Text="דואר אלקטרוני" Grid.Column="0" Style="{StaticResource labelNameStyle}"/>
+                        <Label Text="{Binding EmailError}" IsVisible="{Binding ShowEmailError}" Grid.Column="1" Style="{StaticResource labelErrorStyle}"/>
+                    </Grid>
+                    <Entry Placeholder="הכנס דואר אלקטרוני" Text="{Binding Email}" Style="{StaticResource entryStyle}"/>
+
+                    <!-- רשימת טלפונים-->
+                    <Label Text="טלפונים " Style="{StaticResource labelNameStyle}"/>
+                    
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                        <Label Text="סוג" Style="{StaticResource labelTableStyle}"  Grid.Row="0" Grid.Column="0"/>
+                        <Label Text="מספר" Style="{StaticResource labelTableStyle}"  Grid.Row="0" Grid.Column="1"/>
+                        </Grid>
+
+                        <CollectionView EmptyView="אין כרגע טלפונים לאיש הקשר" x:Name="collectionName" VerticalOptions="Start" ItemsSource="{Binding ContactPhones}"  SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Span="1" Orientation="Vertical" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <SwipeView>
+                                        <SwipeView.LeftItems>
+                                            <SwipeItems>
+                                                <SwipeItem Text="מחק"
+                                           IconImageSource="delete.png"
+                                           BackgroundColor="White"
+                                           Command="{Binding Source={x:Reference collectionName}, Path=BindingContext.DeletePhoneCommand}"
+                                           CommandParameter="{Binding}" />
+                                            </SwipeItems>
+                                        </SwipeView.LeftItems>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="35" />
+                                            </Grid.RowDefinitions>
+                                        <Label Text="{Binding PhoneType.TypeName}" Style="{StaticResource labelTableStyle}"  Grid.Row="0" Grid.Column="0"/>
+                                        <Label Text="{Binding PhoneNumber}" Style="{StaticResource labelTableStyle}" Grid.Row="0" Grid.Column="1"/>
+                                        </Grid>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        
+            
+                </StackLayout>
+            </ScrollView>
+            <Button Text="שמור נתונים" Command="{Binding SaveDataCommand}"></Button>
+        </StackLayout>
+        
+    </ContentPage.Content>
+</ContentPage>

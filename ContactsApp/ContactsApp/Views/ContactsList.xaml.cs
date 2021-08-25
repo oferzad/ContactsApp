@@ -32,5 +32,10 @@ namespace ContactsApp.Views
             theApp.CurrentUser = null;
             theApp.MainPage = new Login();
         }
+
+        private void AddContact_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
