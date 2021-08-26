@@ -8,12 +8,13 @@ namespace ContactsApp.Models
     {
         public PhoneType()
         {
-            ContactPhones = new List<ContactPhone>();
+            //This property is not needed on the client side
+            //ContactPhones = new List<ContactPhone>();
         }
 
         public int TypeId { get; set; }
         public string TypeName { get; set; }
 
-        public virtual List<ContactPhone> ContactPhones { get; set; }
+        //public virtual List<ContactPhone> ContactPhones { get; set; }
     }
 }
