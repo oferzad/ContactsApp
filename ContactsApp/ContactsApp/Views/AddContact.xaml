@@ -12,6 +12,21 @@
         <StackLayout>
             <ScrollView>
                 <StackLayout Padding="0,20,0,0">
+                    <!-- תמונה -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="150" />
+                        </Grid.RowDefinitions>
+                        <Image x:Name="theImage" Source="http://10.0.2.2:21604/Images/2.jpg" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"/>
+                        <ImageButton Source="photogallery.png" HorizontalOptions="End" BackgroundColor="White" Grid.Column="0" Grid.Row="0" Command="{Binding PickImageCommand}"/>
+                        <ImageButton Source="camera.png" HorizontalOptions="Start" Grid.Column="1" Grid.Row="0" BackgroundColor="White" Command="{Binding CameraImageCommand}"/>
+                    </Grid>
+                    
                     <!-- שם פרטי -->
                     <Grid>
                         <Grid.ColumnDefinitions>

@@ -10,6 +10,7 @@ using ContactsApp.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Xamarin.Essentials;
 
 namespace ContactsApp.ViewModels
 {
@@ -171,9 +172,23 @@ namespace ContactsApp.ViewModels
         }
         #endregion
 
+        #region מקור התמונה
+        private string contactImgSrc;
+
+        public string ContactImgSrc
+        {
+            get => contactImgSrc;
+            set
+            {
+                contactImgSrc = value;
+                OnPropertyChanged("ContactImgSrc");
+            }
+        }
+        private const string DEFAULT_PHOTO_SRC = "defaultPhoto.jpg";
+        #endregion
         #region רשימת טלפונים
-        ObservableCollection<ContactPhone> contactPhones;
-        public ObservableCollection<ContactPhone> ContactPhones
+        ObservableCollection<Models.ContactPhone> contactPhones;
+        public ObservableCollection<Models.ContactPhone> ContactPhones
         {
             get
             {
@@ -206,8 +221,17 @@ namespace ContactsApp.ViewModels
                     FirstName = "",
                     LastName = "",
                     Email = "",
-                    ContactPhones = new List<ContactPhone>()
+                    ContactPhones = new List<Models.ContactPhone>()
                 };
+
+                //Setup default image photo
+                this.ContactImgSrc = DEFAULT_PHOTO_SRC;
+            }
+            else
+            {
+                //set the path url to the contact photo
+                ContactsAPIProxy proxy = ContactsAPIProxy.CreateProxy();
+                this.ContactImgSrc = proxy.GetBasePhotoUri() + uc.ContactId + ".jpg";
             }
 
             this.theContact = uc;
@@ -218,7 +242,7 @@ namespace ContactsApp.ViewModels
             this.ShowNameError = false;
             this.ShowLastNameError = false;
             this.ShowEmailError = false;
-            this.ContactPhones = new ObservableCollection<ContactPhone>(uc.ContactPhones);
+            this.ContactPhones = new ObservableCollection<Models.ContactPhone>(uc.ContactPhones);
             this.SaveDataCommand = new Command(() => SaveData());
             this.Name = uc.FirstName;
             this.LastName = uc.LastName;
@@ -278,6 +302,14 @@ namespace ContactsApp.ViewModels
                 }
                 else
                 {
+                    if (this.imageFileResult != null)
+                    {
+                        ServerStatus = "מעלה תמונה...";
+                        bool success = await proxy.UploadImage(new FileInfo()
+                        {
+                            Name = this.imageFileResult.FullPath
+                        }, $"{newUC.ContactId}.jpg"); 
+                    }
                     ServerStatus = "שומר נתונים...";
                     //if someone registered to get the contact added event, fire the event
                     if (this.ContactUpdatedEvent != null)
@@ -295,8 +327,8 @@ namespace ContactsApp.ViewModels
         }
 
         //The following command deletes a phone from the observable phone list
-        public ICommand DeletePhoneCommand => new Command<ContactPhone>(OnDeletePhone);
-        public async void OnDeletePhone(ContactPhone phone)
+        public ICommand DeletePhoneCommand => new Command<Models.ContactPhone>(OnDeletePhone);
+        public async void OnDeletePhone(Models.ContactPhone phone)
         {
             //check if the phone has an id. if so, it is not new and should be deleted from server
             if (phone.PhoneId > 0)
@@ -325,6 +357,48 @@ namespace ContactsApp.ViewModels
             p.BindingContext = new AddPhoneViewModel(ContactPhones);
             await App.Current.MainPage.Navigation.PushModalAsync(p);
         }
+
+        ///The following command handle the pick photo button
+        FileResult imageFileResult;
+        public event Action<ImageSource> SetImageSourceEvent;
+        public ICommand PickImageCommand => new Command(OnPickImage);
+        public async void OnPickImage()
+        {
+            FileResult result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
+            {
+                Title = "בחר תמונה"
+            });
+
+            if (result != null)
+            {
+                this.imageFileResult = result;
+                
+                var stream = await result.OpenReadAsync();
+                ImageSource imgSource  = ImageSource.FromStream(() => stream);
+                if (SetImageSourceEvent != null)
+                    SetImageSourceEvent(imgSource);
+            }
+        }
+
+        ///The following command handle the take photo button
+        public ICommand CameraImageCommand => new Command(OnCameraImage);
+        public async void OnCameraImage()
+        {
+            var result = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions()
+            {
+                Title = "צלם תמונה"
+            });
+
+            if (result != null)
+            {
+                this.imageFileResult = result;
+                var stream = await result.OpenReadAsync();
+                ImageSource imgSource = ImageSource.FromStream(() => stream);
+                if (SetImageSourceEvent != null)
+                    SetImageSourceEvent(imgSource);
+            }
+        }
+
 
     }
 }
