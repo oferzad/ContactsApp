@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ContactsApp.Views.AddContact"
              FlowDirection="RightToLeft"
-             Title="איש קשר חדש">
+             Title="איש קשר">
     <ContentPage.ToolbarItems>
         <ToolbarItem Name="AddPhone" Order="Primary" Text="הוסף טלפון" Priority="0" Command="{Binding AddPhoneCommand}" />
     </ContentPage.ToolbarItems>
@@ -22,7 +22,7 @@
                             <RowDefinition Height="30" />
                             <RowDefinition Height="150" />
                         </Grid.RowDefinitions>
-                        <Image x:Name="theImage" Source="http://10.0.2.2:21604/Images/2.jpg" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"/>
+                        <Image x:Name="theImage" Source="{Binding ContactImgSrc}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"/>
                         <ImageButton Source="photogallery.png" HorizontalOptions="End" BackgroundColor="White" Grid.Column="0" Grid.Row="0" Command="{Binding PickImageCommand}"/>
                         <ImageButton Source="camera.png" HorizontalOptions="Start" Grid.Column="1" Grid.Row="0" BackgroundColor="White" Command="{Binding CameraImageCommand}"/>
                     </Grid>
