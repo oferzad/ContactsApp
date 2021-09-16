@@ -249,8 +249,9 @@ namespace ContactsApp.Services
                 else
                     return false;
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return false;
             }
         }

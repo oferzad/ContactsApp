@@ -89,7 +89,7 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\defaultPhoto.jpg" />
+    <AndroidResource Include="Resources\drawable\defaultphoto.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ContactsApp\ContactsApp.csproj">

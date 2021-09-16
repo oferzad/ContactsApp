@@ -184,7 +184,7 @@ namespace ContactsApp.ViewModels
                 OnPropertyChanged("ContactImgSrc");
             }
         }
-        private const string DEFAULT_PHOTO_SRC = "defaultPhoto.jpg";
+        private const string DEFAULT_PHOTO_SRC = "defaultphoto.jpg";
         #endregion
         #region רשימת טלפונים
         ObservableCollection<Models.ContactPhone> contactPhones;
@@ -226,12 +226,16 @@ namespace ContactsApp.ViewModels
 
                 //Setup default image photo
                 this.ContactImgSrc = DEFAULT_PHOTO_SRC;
+                this.imageFileResult = null; //mark that no picture was chosen
+                
             }
             else
             {
                 //set the path url to the contact photo
                 ContactsAPIProxy proxy = ContactsAPIProxy.CreateProxy();
-                this.ContactImgSrc = proxy.GetBasePhotoUri() + uc.ContactId + ".jpg";
+                //Create a source with cache busting!
+                Random r = new Random();
+                this.ContactImgSrc = proxy.GetBasePhotoUri() + uc.ContactId + $".jpg?{r.Next()}";
             }
 
             this.theContact = uc;
@@ -305,6 +309,7 @@ namespace ContactsApp.ViewModels
                     if (this.imageFileResult != null)
                     {
                         ServerStatus = "מעלה תמונה...";
+                        
                         bool success = await proxy.UploadImage(new FileInfo()
                         {
                             Name = this.imageFileResult.FullPath

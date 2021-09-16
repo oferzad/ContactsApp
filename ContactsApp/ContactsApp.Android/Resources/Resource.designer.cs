@@ -12077,7 +12077,7 @@ namespace ContactsApp.Droid
 			public const int camera = 2131165286;
 			
 			// aapt resource value: 0x7F070067
-			public const int defaultPhoto = 2131165287;
+			public const int defaultphoto = 2131165287;
 			
 			// aapt resource value: 0x7F070068
 			public const int delete = 2131165288;
