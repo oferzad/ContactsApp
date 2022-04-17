@@ -27,7 +27,17 @@ namespace ContactsApp
             InitializeComponent();
             CurrentUser = null;
             PhoneTypes = new List<PhoneType>();
-            MainPage = new Login();
+            //Too run the chat example
+            CurrentUser = new User()
+            {
+                //Fill your chat identity
+                //In real project it will be filled by the login process
+                Email = "Ofer"
+            };
+            MainPage = new ChatView();
+            //To run the contacts example
+            //MainPage = new Login();
+
         }
 
         protected override void OnStart()
